@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+
+  backend:
+    build: ./backend
+    container_name: ikenna-backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    networks:
+      - ikenna-net
+
+  mysql:
+    image: mysql:8
+    container_name: ikenna-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: testdb
+    ports:
+      - "3306:3306"
+    networks:
+      - ikenna-net
+
+  frontend:
+    build: ./frontend
+    container_name: ikenna-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - ikenna-net
+
+networks:
+  ikenna-net:
