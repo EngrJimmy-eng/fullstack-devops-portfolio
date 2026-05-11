@@ -13,7 +13,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/contact", contactRoutes);
+app.use("/api/contact", contactRoutes);
 app.get("/", (req, res) => {
   res.send("Backend running");
 });
