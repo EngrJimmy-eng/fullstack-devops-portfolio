@@ -2,6 +2,8 @@ require("dotenv").config();
 
 const db = require("./config/db");
 
+const registerRoutes = require("./routes/register");
+
 const mysql = require("mysql2");
 
 const bcrypt = require("bcryptjs");
@@ -19,6 +21,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/contact", contactRoutes);
+
+app.use("/api/register", registerRoutes);
 
 app.get("/", (req, res) => {
   res.send("Backend running");
