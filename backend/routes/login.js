@@ -6,6 +6,8 @@ const bcrypt = require("bcryptjs");
 
 const db = require("../config/db");
 
+const jwt = require("jsonwebtoken");
+
 router.post("/", (req, res) => {
 
   const { email, password } = req.body;
@@ -52,16 +54,29 @@ router.post("/", (req, res) => {
       }
 
       // success
-      return res.json({
-        success: true,
-        message: "Login successful",
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role
-        }
-      });
+      const token = jwt.sign(
+  {
+    id: user.id,
+    email: user.email,
+    role: user.role
+  },
+  process.env.JWT_SECRET,
+  {
+    expiresIn: "1d"
+  }
+);
+
+return res.json({
+  success: true,
+  message: "Login successful",
+  token,
+  user: {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role
+  }
+});
     }
   );
 });
