@@ -14,6 +14,9 @@ const cors = require("cors");
 
 const contactRoutes = require("./routes/contact");
 
+const loginRoutes = require("./routes/login");
+
+
 const app = express();
 
 app.use(cors());
@@ -23,6 +26,8 @@ app.use(express.json());
 app.use("/api/contact", contactRoutes);
 
 app.use("/api/register", registerRoutes);
+
+app.use("/api/login", loginRoutes);
 
 app.get("/", (req, res) => {
   res.send("Backend running");
