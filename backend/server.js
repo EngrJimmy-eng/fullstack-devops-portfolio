@@ -21,7 +21,8 @@ const profileRoutes = require("./routes/profile");
 const helmet = require("helmet");
 
 const logger = require("./middleware/logger");
-‎const contactLimiter = require("./middleware/rateLimit");
+
+const contactLimiter = require("./middleware/rateLimit");
 ‎const validateContact = require("./middleware/validateContact");
 ‎const errorHandler = require("./
 
