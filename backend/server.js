@@ -22,7 +22,7 @@ const helmet = require("helmet");
 
 const logger = require("./middleware/logger");
 
-const contactLimiter = require("./middleware/rateLimit");
+
 ‎const validateContact = require("./middleware/validateContact");
 ‎const errorHandler = require("./
 
@@ -53,7 +53,6 @@ app.get("/", (req, res) => {
 ‎// contact route with middleware chain
 ‎app.post(
 ‎  "/api/contact",
-‎  contactLimiter,
 ‎  validateContact,
 ‎  (req, res) => {
 ‎    const { name, message } = req.body;
