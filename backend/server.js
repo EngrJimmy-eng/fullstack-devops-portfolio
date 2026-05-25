@@ -20,14 +20,11 @@ const profileRoutes = require("./routes/profile");
 
 const helmet = require("helmet");
 
-
 const app = express();
 
 app.use(cors());
 
 app.use(express.json());
-
-
 
 app.use(helmet());
 
@@ -39,13 +36,9 @@ app.use("/api/login", loginRoutes);
 
 app.use("/api/profile", profileRoutes);
 
-
-
 app.get("/", (req, res) => {
   res.send("Backend running");
 });
-
-‎
 
 app.listen(5000, () => {
   console.log("Server running on port 5000");
