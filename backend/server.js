@@ -16,8 +16,6 @@ const contactRoutes = require("./routes/contact");
 
 const loginRoutes = require("./routes/login");
 
-const profileRoutes = require("./routes/profile");
-
 const helmet = require("helmet");
 
 const app = express();
@@ -33,8 +31,6 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/register", registerRoutes);
 
 app.use("/api/login", loginRoutes);
-
-app.use("/api/profile", profileRoutes);
 
 app.get("/", (req, res) => {
   res.send("Backend running");
