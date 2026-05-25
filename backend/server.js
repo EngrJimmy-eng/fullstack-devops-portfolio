@@ -12,6 +12,8 @@ const express = require("express");
 
 const cors = require("cors");
 
+const logger = require("./middleware/logger");
+
 const contactRoutes = require("./routes/contact");
 
 const loginRoutes = require("./routes/login");
@@ -37,5 +39,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(5000, () => {
-  console.log("Server running on port 5000");
+  logger.info("Server running on port 5000");
 });
