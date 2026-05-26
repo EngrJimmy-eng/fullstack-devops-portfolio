@@ -46,6 +46,20 @@ app.get("/", (req, res) => {
   res.send("Backend running");
 });
 
+app.use((err, req, res, next) => {
+  logger.error({
+    message: err.message,
+    stack: err.stack,
+    method: req.method,
+    url: req.originalUrl,
+  });
+
+  res.status(500).json({
+    success: false,
+    message: "Internal Server Error",
+  });
+});
+
 app.listen(5000, () => {
   logger.info("Server running on port 5000");
 });
