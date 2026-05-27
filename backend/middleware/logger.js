@@ -1,6 +1,6 @@
 const winston = require("winston");
 
-const logger = winston.createLogger({
+const accessLogger = winston.createLogger({
   level: "info",
 
   format: winston.format.combine(
@@ -12,20 +12,35 @@ const logger = winston.createLogger({
     new winston.transports.Console(),
 
     new winston.transports.File({
-      filename: "logs/error.log",
-      level: "error",
-    }),
-
-    new winston.transports.File({
       filename: "logs/access.log",
     }),
   ],
 });
 
-logger.stream = {
+const errorLogger = winston.createLogger({
+  level: "error",
+
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+
+  transports: [
+    new winston.transports.Console(),
+
+    new winston.transports.File({
+      filename: "logs/error.log",
+    }),
+  ],
+});
+
+accessLogger.stream = {
   write: (message) => {
-    logger.info(message.trim());
+    accessLogger.info(message.trim());
   },
 };
 
-module.exports = logger;
+module.exports = {
+  accessLogger,
+  errorLogger,
+};

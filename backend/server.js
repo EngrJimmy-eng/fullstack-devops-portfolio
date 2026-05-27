@@ -14,7 +14,10 @@ const cors = require("cors");
 
 const morgan = require("morgan");
 
-const logger = require("./middleware/logger");
+const {
+  accessLogger,
+  errorLogger,
+} = require("./middleware/logger");
 
 const contactRoutes = require("./routes/contact");
 
@@ -28,7 +31,7 @@ app.use(cors());
 
 app.use(
   morgan("combined", {
-    stream: logger.stream,
+    stream: accessLogger.stream,
   })
 );
 
@@ -47,12 +50,12 @@ app.get("/", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  logger.error({
-    message: err.message,
-    stack: err.stack,
-    method: req.method,
-    url: req.originalUrl,
-  });
+  errorLogger.error({
+  message: err.message,
+  stack: err.stack,
+  method: req.method,
+  url: req.originalUrl,
+});
 
   res.status(500).json({
     success: false,
