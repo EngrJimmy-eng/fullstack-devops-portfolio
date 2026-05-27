@@ -28,28 +28,31 @@ services:
         awslogs-stream: nginx
 
   backend:
-    build: ./backend
-    container_name: ikenna-backend
-    restart: always
+  build: ./backend
+  container_name: ikenna-backend
+  restart: always
 
-    expose:
-      - "5000"
+  volumes:
+    - ./backend/logs:/app/logs
 
-    env_file:
-      - ./backend/.env
+  expose:
+    - "5000"
 
-    depends_on:
-      - mysql
+  env_file:
+    - ./backend/.env
 
-    networks:
-      - ikenna-net
+  depends_on:
+    - mysql
 
-    logging:
-      driver: awslogs
-      options:
-        awslogs-region: eu-west-1
-        awslogs-group: ikenna-backend
-        awslogs-stream: backend
+  networks:
+    - ikenna-net
+
+  logging:
+    driver: awslogs
+    options:
+      awslogs-region: eu-west-1
+      awslogs-group: ikenna-backend
+      awslogs-stream: backend
 
   frontend:
     build: ./frontend
