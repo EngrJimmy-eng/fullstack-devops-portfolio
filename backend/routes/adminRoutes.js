@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 
 const router = express.Router();
 
-// temporary hardcoded admin
+// Temporary admin credentials
 const adminUser = {
   username: "admin",
   passwordHash: bcrypt.hashSync("admin123", 10),
@@ -13,6 +13,7 @@ const adminUser = {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
+  // Check username
   if (username !== adminUser.username) {
     return res.status(401).json({
       success: false,
@@ -20,6 +21,7 @@ router.post("/login", async (req, res) => {
     });
   }
 
+  // Check password
   const validPassword = await bcrypt.compare(
     password,
     adminUser.passwordHash
@@ -32,6 +34,7 @@ router.post("/login", async (req, res) => {
     });
   }
 
+  // Generate token
   const token = jwt.sign(
     { username },
     process.env.JWT_SECRET,
