@@ -65,7 +65,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.get("/test401", (req, res) => {
+app.get("/api/test401", (req, res) => {
   return res.status(401).json({
     success: false,
     message: "Unauthorized test"
