@@ -14,6 +14,8 @@ const cors = require("cors");
 
 const morgan = require("morgan");
 
+const adminRoutes = require("./routes/adminRoutes");
+
 const {
   accessLogger,
   errorLogger,
@@ -71,6 +73,8 @@ app.get("/api/test401", (req, res) => {
     message: "Unauthorized test"
   });
 });
+
+app.use("/api/admin", adminRoutes);
 
 app.listen(5000, () => {
   console.log("Server running on port 5000");
