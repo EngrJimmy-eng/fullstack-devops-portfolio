@@ -1,6 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -44,6 +45,14 @@ router.post("/login", async (req, res) => {
   res.json({
     success: true,
     token,
+  });
+});
+
+router.get("/dashboard", auth, (req, res) => {
+  res.json({
+    success: true,
+    message: "Welcome Admin",
+    user: req.user,
   });
 });
 
