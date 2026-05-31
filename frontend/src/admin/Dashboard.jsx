@@ -2,20 +2,36 @@ import { useEffect, useState } from "react";
 import { getToken, logout } from "../utils/auth";
 
 export default function Dashboard() {
-  const [data, setData] = useState("");
+  const [data, setData] = useState("Loading...");
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = getToken();
+      try {
+        const token = getToken();
 
-      const res = await fetch("/api/admin/dashboard", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+        if (!token) {
+          setData("No token found. Please login again.");
+          return;
+        }
 
-      const result = await res.json();
-      setData(result.message);
+        const res = await fetch("/api/admin/dashboard", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+          setData(result.message);
+        } else {
+          setData(result.message || "Access denied");
+        }
+
+      } catch (err) {
+        console.error(err);
+        setData("Server error or network issue");
+      }
     };
 
     fetchData();
