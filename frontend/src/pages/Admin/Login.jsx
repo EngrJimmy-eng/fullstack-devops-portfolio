@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { loginAdmin } from "../../api/authApi";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../auth/AuthContext";
+import { useAuth } from "../../api/auth/AuthContext";
 
 /**
  * Admin Login Page
