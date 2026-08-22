@@ -1,10 +1,8 @@
-# =====================================
-# Node.js Backend
-# =====================================
-
 FROM node:22-alpine
 
 WORKDIR /app
+
+RUN npm install -g npm@12.0.2
 
 COPY package*.json ./
 
