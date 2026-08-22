@@ -79,7 +79,7 @@ jobs:
 
 
   # ============================================================
-  # DOCKER BUILD
+  # DOCKER BUILDS
   # ============================================================
   docker-builds:
     name: Docker Builds
@@ -124,10 +124,8 @@ jobs:
         uses: actions/checkout@v4
 
       # --------------------------------------------------------
-      # Build images again
-      # --------------------------------------------------------
       # Each GitHub Actions job runs on a fresh runner.
-      # Therefore images from docker-builds are not available here.
+      # Therefore the images from docker-builds must be rebuilt.
       # --------------------------------------------------------
 
       - name: Build frontend image
@@ -142,10 +140,10 @@ jobs:
             -t fullstack-devops-portfolio-backend:ci \
             ./backend
 
-
       # ========================================================
       # FRONTEND CONTAINER
       # ========================================================
+
       - name: Run frontend container
         run: |
           docker run -d \
@@ -168,10 +166,10 @@ jobs:
         run: |
           docker rm -f frontend-smoke || true
 
-
       # ========================================================
       # BACKEND CONTAINER
       # ========================================================
+
       - name: Run backend container
         run: |
           docker run -d \
@@ -209,183 +207,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-
       # ========================================================
       # BUILD FRONTEND SCAN IMAGE
       # ========================================================
-      - name: Build frontend image
+
+      - name: Build frontend scan image
         run: |
           docker build \
             -t fullstack-devops-portfolio-frontend:scan \
             ./frontend
 
-
       # ========================================================
       # BUILD BACKEND SCAN IMAGE
       # ========================================================
-      - name: Build backend image
+
+      - name: Build backend scan image
         run: |
           docker build \
             -t fullstack-devops-portfolio-backend:scan \
             ./backend
 
-
-      # ========================================================
-      # INSPECT NODE AND NPM VERSIONS
-      # ========================================================
-      - name: Inspect Node and npm versions
-        run: |
-          docker run --rm \
-            fullstack-devops-portfolio-backend:scan \
-            sh -c '
-              echo "=============================================="
-              echo "NODE AND NPM VERSION INVESTIGATION"
-              echo "=============================================="
-
-              echo ""
-              echo "=== Node ==="
-              node --version
-
-              echo ""
-              echo "=== npm ==="
-              npm --version
-
-              echo ""
-              echo "=== npm package ==="
-              node -p \
-                "require(\"/usr/local/lib/node_modules/npm/package.json\").version"
-
-              echo ""
-              echo "=== Vulnerable npm bundled packages ==="
-
-              for pkg in brace-expansion picomatch ip-address sigstore tar; do
-                echo ""
-                echo "PACKAGE: $pkg"
-
-                node -p \
-                  "require(\"/usr/local/lib/node_modules/npm/node_modules/$pkg/package.json\").version" \
-                  2>/dev/null || echo "Not found"
-              done
-
-              echo ""
-              echo "=============================================="
-              echo "END VERSION INVESTIGATION"
-              echo "=============================================="
-            '
-
-
-      # ========================================================
-      # SEARCH ENTIRE BACKEND IMAGE
-      # ========================================================
-      - name: Search entire backend image for vulnerable packages
-        run: |
-          docker run --rm \
-            fullstack-devops-portfolio-backend:scan \
-            sh -c '
-              echo "=============================================="
-              echo "SEARCHING ENTIRE BACKEND IMAGE"
-              echo "=============================================="
-
-              for pkg in brace-expansion picomatch ip-address sigstore tar; do
-                echo ""
-                echo "=============================================="
-                echo "PACKAGE: $pkg"
-                echo "=============================================="
-
-                find / \
-                  -type d \
-                  -name "$pkg" \
-                  2>/dev/null || true
-              done
-
-              echo ""
-              echo "=============================================="
-              echo "END IMAGE SEARCH"
-              echo "=============================================="
-            '
-
-
-      # ========================================================
-      # LOCATE VULNERABLE PACKAGE.JSON FILES
-      # ========================================================
-      - name: Locate vulnerable package.json files
-        run: |
-          docker run --rm \
-            fullstack-devops-portfolio-backend:scan \
-            sh -c '
-              echo "=============================================="
-              echo "VULNERABLE PACKAGE.JSON LOCATIONS"
-              echo "=============================================="
-
-              for pkg in brace-expansion picomatch ip-address sigstore tar; do
-                echo ""
-                echo "PACKAGE: $pkg"
-
-                find / \
-                  -type f \
-                  -path "*/$pkg/package.json" \
-                  2>/dev/null || true
-              done
-
-              echo ""
-              echo "=============================================="
-              echo "END PACKAGE LOCATION SEARCH"
-              echo "=============================================="
-            '
-
-
-      # ========================================================
-      # INSPECT npm BUNDLED DEPENDENCIES
-      # ========================================================
-      - name: Inspect npm bundled dependencies
-        run: |
-          docker run --rm \
-            fullstack-devops-portfolio-backend:scan \
-            sh -c '
-              echo "=============================================="
-              echo "NPM BUNDLED DEPENDENCY INVESTIGATION"
-              echo "=============================================="
-
-              echo ""
-              echo "=== Node ==="
-              node --version
-
-              echo ""
-              echo "=== npm ==="
-              npm --version
-
-              echo ""
-              echo "=== npm installation ==="
-              which npm
-              npm root -g
-
-              echo ""
-              echo "=== npm package ==="
-              node -p \
-                "require(\"/usr/local/lib/node_modules/npm/package.json\").version"
-
-              echo ""
-              echo "=== Vulnerable package versions ==="
-
-              for pkg in brace-expansion picomatch ip-address sigstore tar; do
-                echo ""
-                echo "PACKAGE: $pkg"
-
-                node -p \
-                  "require(\"/usr/local/lib/node_modules/npm/node_modules/$pkg/package.json\").version" \
-                  2>/dev/null || echo "Package not found"
-              done
-
-              echo ""
-              echo "=============================================="
-              echo "END NPM INVESTIGATION"
-              echo "=============================================="
-            '
-
-
       # ========================================================
       # TRIVY - FRONTEND
       # ========================================================
+
       - name: Scan frontend Docker image
         uses: aquasecurity/trivy-action@v0.36.0
         with:
@@ -395,10 +240,10 @@ jobs:
           ignore-unfixed: true
           exit-code: 1
 
-
       # ========================================================
       # TRIVY - BACKEND
       # ========================================================
+
       - name: Scan backend Docker image
         uses: aquasecurity/trivy-action@v0.36.0
         with:
@@ -410,10 +255,10 @@ jobs:
           format: json
           output: trivy-backend.json
 
+      # ========================================================
+      # BACKEND VULNERABILITY SUMMARY
+      # ========================================================
 
-      # ========================================================
-      # PRINT BACKEND VULNERABILITY SUMMARY
-      # ========================================================
       - name: Print backend vulnerability summary
         if: always()
         run: |
