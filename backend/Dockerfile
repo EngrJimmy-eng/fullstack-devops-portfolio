@@ -5,7 +5,7 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Upgrade npm to patched version
+# Upgrade npm
 RUN npm install -g npm@12.0.2
 
 COPY package*.json ./
@@ -23,8 +23,10 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-# Upgrade npm in the FINAL image as well
-RUN npm install -g npm@12.0.2 \
+# Update Alpine packages and npm
+RUN apk update \
+    && apk upgrade --no-cache \
+    && npm install -g npm@12.0.2 \
     && npm cache clean --force
 
 # Copy production dependencies
