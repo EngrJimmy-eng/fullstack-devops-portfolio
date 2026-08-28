@@ -20,6 +20,9 @@ FROM node:22-alpine
 
 WORKDIR /app
 
+# Update Alpine packages to their latest security fixes
+RUN apk upgrade --no-cache
+
 # Copy production dependencies
 COPY --from=builder /app/node_modules ./node_modules
 
@@ -28,5 +31,4 @@ COPY --from=builder /app ./
 
 EXPOSE 5000
 
-# Run Node directly — npm is not required to start the application
 CMD ["node", "server.js"]
