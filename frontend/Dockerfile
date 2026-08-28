@@ -11,8 +11,12 @@ COPY . .
 
 RUN npm run build
 
+
 # Stage 2: Serve
 FROM nginx:alpine
+
+# Update Alpine packages to their latest security fixes
+RUN apk upgrade --no-cache
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
