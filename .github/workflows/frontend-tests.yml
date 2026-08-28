@@ -311,6 +311,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Debug GitHub OIDC claims
+        uses: github/actions-oidc-debugger@main
+
       # --------------------------------------------------------
       # Configure AWS credentials using GitHub OIDC
       # --------------------------------------------------------
