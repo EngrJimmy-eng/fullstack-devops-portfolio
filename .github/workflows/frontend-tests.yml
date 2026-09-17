@@ -311,16 +311,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Debug GitHub OIDC subject
-        run: |
-          RESPONSE=$(curl -sS \
-          -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-          "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com")
-
-          TOKEN=$(echo "$RESPONSE" | jq -r '.value')
-
-          echo "$TOKEN" | cut -d '.' -f2 | base64 -d 2>/dev/null | jq -r '.sub'
-
       # --------------------------------------------------------
       # Configure AWS credentials using GitHub OIDC
       # --------------------------------------------------------
