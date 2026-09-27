@@ -19,7 +19,7 @@ describe("API client configuration", () => {
 
   test("uses the correct API base URL", () => {
     expect(api.defaults.baseURL).toBe(
-      "http://52.30.184.176:5000/api"
+      "/api"
     );
   });
 
