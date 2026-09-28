@@ -1,6 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../api/auth/AuthContext";
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/admin/login", { replace: true });
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
 
@@ -56,6 +65,15 @@ export default function AdminDashboard() {
             <span>←</span>
             Back to Website
           </Link>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium text-slate-400 transition hover:bg-slate-800 hover:text-white"
+          >
+            <span>↪</span>
+            Logout
+          </button>
         </div>
 
       </aside>

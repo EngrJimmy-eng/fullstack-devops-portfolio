@@ -14,6 +14,15 @@ jest.unstable_mockModule("../config/db.js", () => ({
 
 jest.unstable_mockModule("../middleware/auth.js", () => ({
   default: (req, res, next) => {
+    if (req.headers.authorization === "Bearer user-token") {
+      req.user = {
+        id: 2,
+        email: "user@example.com",
+        role: "user",
+      };
+      return next();
+    }
+
     if (req.headers.authorization === "Bearer valid-token") {
       req.user = {
         id: 1,
@@ -58,6 +67,22 @@ describe("GET /api/admin/messages", () => {
 
     expect(db.query).not.toHaveBeenCalled();
   });
+
+  test("returns 403 when an authenticated user is not an admin", async () => {
+    const response = await request(app)
+      .get("/api/admin/messages")
+      .set("Authorization", "Bearer user-token");
+
+    expect(response.statusCode).toBe(403);
+
+    expect(response.body).toEqual({
+      success: false,
+      message: "Admin access required",
+    });
+
+    expect(db.query).not.toHaveBeenCalled();
+  });
+
 
   test("returns all messages for an authenticated admin", async () => {
     const messages = [

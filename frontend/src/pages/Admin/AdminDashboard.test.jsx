@@ -2,14 +2,20 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, test } from "vitest";
 import AdminDashboard from "./AdminDashboard";
+import { AuthProvider } from "../../api/auth/AuthContext";
+
+const renderDashboard = () =>
+  render(
+    <MemoryRouter>
+      <AuthProvider>
+        <AdminDashboard />
+      </AuthProvider>
+    </MemoryRouter>
+  );
 
 describe("AdminDashboard", () => {
   test("renders the dashboard heading and welcome message", () => {
-    render(
-      <MemoryRouter>
-        <AdminDashboard />
-      </MemoryRouter>
-    );
+    renderDashboard();
 
     expect(
       screen.getByRole("heading", { name: "Dashboard" })
@@ -27,11 +33,7 @@ describe("AdminDashboard", () => {
   });
 
   test("renders the Messages administration links", () => {
-    render(
-      <MemoryRouter>
-        <AdminDashboard />
-      </MemoryRouter>
-    );
+    renderDashboard();
 
     const messageLinks = screen.getAllByRole("link", {
       name: /Messages/i,
@@ -45,11 +47,7 @@ describe("AdminDashboard", () => {
   });
 
   test("renders the View Website link pointing to the homepage", () => {
-    render(
-      <MemoryRouter>
-        <AdminDashboard />
-      </MemoryRouter>
-    );
+    renderDashboard();
 
     const websiteLinks = screen.getAllByRole("link", {
       name: /View Website/i,
@@ -63,18 +61,22 @@ describe("AdminDashboard", () => {
   });
 
   test("displays Security and System operational status", () => {
-    render(
-      <MemoryRouter>
-        <AdminDashboard />
-      </MemoryRouter>
-    );
+    renderDashboard();
 
     expect(screen.getByText("Security")).toBeInTheDocument();
-    expect(screen.getByText("JWT authentication is protecting the administration area.")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "JWT authentication is protecting the administration area."
+      )
+    ).toBeInTheDocument();
     expect(screen.getByText("Protected")).toBeInTheDocument();
 
     expect(screen.getByText("System")).toBeInTheDocument();
-    expect(screen.getByText("Backend and administration services are configured.")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Backend and administration services are configured."
+      )
+    ).toBeInTheDocument();
     expect(screen.getByText("Operational")).toBeInTheDocument();
   });
 });

@@ -20,8 +20,16 @@ describe("ProtectedRoute", () => {
     expect(screen.queryByText("Protected Dashboard")).not.toBeInTheDocument();
   });
 
-  test("renders protected content when a token exists", () => {
-    localStorage.setItem("token", "test-token");
+  test("renders protected content for an admin user", () => {
+    localStorage.setItem("token", "admin-token");
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        id: 1,
+        email: "admin@example.com",
+        role: "admin",
+      })
+    );
 
     render(
       <MemoryRouter initialEntries={["/admin"]}>
@@ -34,8 +42,38 @@ describe("ProtectedRoute", () => {
     expect(screen.getByText("Protected Dashboard")).toBeInTheDocument();
   });
 
+  test("does not render protected content for a normal user", () => {
+    localStorage.setItem("token", "user-token");
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        id: 2,
+        email: "user@example.com",
+        role: "user",
+      })
+    );
+
+    render(
+      <MemoryRouter initialEntries={["/admin"]}>
+        <ProtectedRoute>
+          <div>Protected Dashboard</div>
+        </ProtectedRoute>
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByText("Protected Dashboard")).not.toBeInTheDocument();
+  });
+
   test("does not render protected content when the token is removed", () => {
-    localStorage.setItem("token", "test-token");
+    localStorage.setItem("token", "admin-token");
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        id: 1,
+        email: "admin@example.com",
+        role: "admin",
+      })
+    );
 
     const { rerender } = render(
       <MemoryRouter initialEntries={["/admin/messages"]}>

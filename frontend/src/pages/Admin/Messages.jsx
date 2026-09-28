@@ -12,7 +12,7 @@ export default function Messages() {
   const fetchMessages = async () => {
     try {
       const res = await getMessages();
-      setMessages(res.data);
+      setMessages(res.data.messages);
     } catch (err) {
       console.error("Error fetching messages:", err);
     } finally {
