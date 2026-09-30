@@ -22,7 +22,7 @@ describe("Messages", () => {
 
   test("displays messages returned by the API", async () => {
     getMessages.mockResolvedValue({
-      data: [
+      data: { messages: [
         {
           id: 1,
           name: "John Doe",
@@ -30,7 +30,7 @@ describe("Messages", () => {
           message: "Hello from the contact form.",
           created_at: "2026-08-14T10:00:00.000Z",
         },
-      ],
+      ] },
     });
 
     render(<Messages />);
@@ -46,7 +46,7 @@ describe("Messages", () => {
 
   test("shows empty state when no messages are returned", async () => {
     getMessages.mockResolvedValue({
-      data: [],
+      data: { messages: [] },
     });
 
     render(<Messages />);
