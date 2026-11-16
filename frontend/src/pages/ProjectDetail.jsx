@@ -1,11 +1,12 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import projects from "../data/projects";
+import { useSelector } from "react-redux";
+import { selectProjectBySlug } from "../features/projects/projectsSlice";
 
 export default function ProjectDetail() {
   const { slug } = useParams();
 
-  const project = projects.find((p) => p.slug === slug);
+  const project = useSelector((state) => selectProjectBySlug(state, slug));
 
   // Project not found
   if (!project) {

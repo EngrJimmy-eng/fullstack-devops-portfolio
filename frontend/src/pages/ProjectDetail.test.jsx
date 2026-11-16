@@ -1,11 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, test } from "vitest";
 import ProjectDetail from "./ProjectDetail";
 import projects from "../data/projects";
+import { renderWithStore } from "../test-utils";
 
 function renderProjectDetail(slug) {
-  return render(
+  return renderWithStore(
     <MemoryRouter initialEntries={[`/projects/${slug}`]}>
       <Routes>
         <Route path="/projects/:slug" element={<ProjectDetail />} />

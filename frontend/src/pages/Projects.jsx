@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
-import projects from "../data/projects"
+import { useSelector } from "react-redux"
+import { selectAllProjects } from "../features/projects/projectsSlice"
 
 export default function Projects() {
+  const projects = useSelector(selectAllProjects);
   return (
     <section className="py-16 px-6 md:px-12 bg-gray-50 min-h-screen">
       <div className="max-w-6xl mx-auto space-y-10">
